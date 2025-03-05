@@ -23,9 +23,7 @@ export const fetchIPData = async (
   apiKey: string
 ): Promise<IPData> => {
   try {
-    const response = await fetch(
-      `${GEOIP_URL}?apiKey=${apiKey}&ipAddress=${ip}`
-    );
+    const response = await fetch(`${GEOIP_URL}?apiKey=${apiKey}&domain=${ip}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch IP data. Status: ${response.status}`);
     }
@@ -46,7 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     }
     const url = new URL(request.url);
-    const ip = url.searchParams.get('ip') || (await getPublicIP());
+    const ip = url.searchParams.get('q') || (await getPublicIP());
 
     const data = await fetchIPData(ip, API_KEY);
     const { ip: dataIp, ...restData } = data;

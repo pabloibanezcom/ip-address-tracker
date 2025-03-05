@@ -1,18 +1,19 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useState } from 'react';
+import { MapPosition } from '~/types/types';
 import style from './Map.module.css';
 
-const center = {
-  lat: 51.5285262,
-  lng: -0.2664025,
+type MapProps = {
+  apiKey: string;
+  position: MapPosition;
 };
 
-const Map = ({ apiKey }: { apiKey: string }) => {
+const Map = ({ apiKey, position }: MapProps) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   return (
     <LoadScript googleMapsApiKey={apiKey} onLoad={() => setMapLoaded(true)}>
-      <GoogleMap mapContainerClassName={style.map} center={center} zoom={12}>
-        {mapLoaded && <Marker position={center} />}
+      <GoogleMap mapContainerClassName={style.map} center={position} zoom={12}>
+        {mapLoaded && <Marker position={position} />}
       </GoogleMap>
     </LoadScript>
   );

@@ -11,7 +11,7 @@ import {
   vi,
 } from 'vitest';
 import { server } from '../../../mocks/server';
-import { fetchIPData, getPublicIP, loader } from '../api.ip';
+import { fetchIPData, getPublicIP, loader } from '../api.whatip';
 
 global.fetch = vi.fn();
 

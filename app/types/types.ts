@@ -2,6 +2,11 @@ export type IPResponse = {
   ip: string;
 };
 
+export type IPRequest = {
+  type: 'ipAddress' | 'domain' | 'email';
+  value: string;
+};
+
 export type IPData = {
   ip: string;
   location: {
@@ -21,4 +26,9 @@ export type IPData = {
     type: string;
   };
   isp: string;
+};
+
+export type MapPosition = {
+  lat: number;
+  lng: number;
 };
