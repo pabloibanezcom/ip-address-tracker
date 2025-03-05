@@ -1,0 +1,17 @@
+.homePage {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.backgroundContainer {
+  height: 280px;
+  width: 100%;
+  background-image: url('/assets/images/pattern-bg-desktop.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.mapContainer {
+  flex-grow: 1;
+}

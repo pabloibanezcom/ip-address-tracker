@@ -1,3 +1,4 @@
+import type { LinksFunction } from '@remix-run/node';
 import {
   Links,
   Meta,
@@ -5,9 +6,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
-import type { LinksFunction } from '@remix-run/node';
 
-import './tailwind.css';
+import './base.css';
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
