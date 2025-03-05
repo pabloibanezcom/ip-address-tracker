@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Map from '~/components/Map/Map';
 import { IPData } from '~/types/types';
+import { fetchIPData } from '~/utils/ipService'; // Extracted API logic
 import style from './HomePage.module.css';
 
 type HomePageProps = {
@@ -8,29 +9,68 @@ type HomePageProps = {
   initialIPData: IPData;
 };
 
-const HomePage = ({ apiKey, initialIPData }: HomePageProps) => {
+const HomePage: React.FC<HomePageProps> = ({ apiKey, initialIPData }) => {
   const [currentIPData, setCurrentIPData] = useState<IPData>(initialIPData);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const searchIPData = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const inputElement = event.currentTarget[0] as HTMLInputElement;
-    const newIpData = await fetch(`/api/whatip?q=${inputElement.value}`);
-    const data = await newIpData.json();
-    setCurrentIPData(data);
+  const searchIPData = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const inputElement = event.currentTarget[0] as HTMLInputElement;
+      if (!inputElement?.value) return;
+
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchIPData(inputElement.value);
+        setCurrentIPData(data);
+      } catch (err) {
+        setError('Failed to retrieve IP data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const renderInfoElement = (title: string, value: string) => {
+    return (
+      <div className={style.infoElement}>
+        <h2 className={style.infoElementTitle}>{title}</h2>
+        <span className={style.infoElementValue}>{value}</span>
+      </div>
+    );
   };
 
   return (
     <div className={style.homePage}>
       <div className={style.backgroundContainer}>
-        <h1>IP address tracker</h1>
-        <div>
-          <form onSubmit={searchIPData}>
-            <input
-              type="text"
-              placeholder="Search for any IP address or domain"
-            />
-            <button type="submit">Search</button>
-          </form>
+        <div className={style.contentContainer}>
+          <div className={style.content}>
+            <h1 className={style.title}>IP Address Tracker</h1>
+            <form onSubmit={searchIPData} className={style.searchForm}>
+              <input
+                type="text"
+                placeholder="Search for any IP address or domain"
+              />
+              <button type="submit" disabled={loading}>
+                {'>'}
+              </button>
+            </form>
+            <div className={style.infoContainer}>
+              {renderInfoElement('IP Address', currentIPData.ip)}
+              {renderInfoElement(
+                'Location',
+                `${currentIPData.location.city}, ${currentIPData.location.region}`
+              )}
+              {renderInfoElement(
+                'Timezone',
+                `UTC ${currentIPData.location.timezone}`
+              )}
+              {renderInfoElement('ISP', currentIPData.isp)}
+            </div>
+          </div>
         </div>
       </div>
       <div className={style.mapContainer}>
@@ -42,6 +82,11 @@ const HomePage = ({ apiKey, initialIPData }: HomePageProps) => {
           }}
         />
       </div>
+      {error && (
+        <div className={style.errorMessage}>
+          <span>{error}</span>
+        </div>
+      )}
     </div>
   );
 };

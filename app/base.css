@@ -2,4 +2,24 @@ html,
 body {
   margin: 0;
   padding: 0;
+
+  font-family: 'Rubik', sans-serif;
+  font-optical-sizing: auto;
+}
+
+h1,
+h2 {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --white: hsl(0, 0%, 100%);
+  --light-grey: hsl(0, 0%, 95%);
+  --dark-grey: hsl(0, 0%, 59%);
+  --very-dark-gray: hsl(0, 0%, 17%);
+  --black-rgb: 0, 0 ,0;
+
+  --content-max-width-desktop: 1120px;
+  --border-radius: 0.85rem;
 }
