@@ -49,12 +49,17 @@ const HomePage: React.FC<HomePageProps> = ({ apiKey, initialIPData }) => {
         <div className={style.contentContainer}>
           <div className={style.content}>
             <h1 className={style.title}>IP Address Tracker</h1>
-            <form onSubmit={searchIPData} className={style.searchForm}>
+            <form
+              onSubmit={searchIPData}
+              method="get"
+              className={style.searchForm}
+            >
               <input
                 type="text"
+                name="q"
                 placeholder="Search for any IP address or domain"
               />
-              <button type="submit" disabled={loading}>
+              <button type="submit" aria-label="Search" disabled={loading}>
                 {'>'}
               </button>
             </form>

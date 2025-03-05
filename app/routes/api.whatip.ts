@@ -13,7 +13,6 @@ export const getPublicIP = async (): Promise<string> => {
     const { ip }: IPResponse = await response.json();
     return ip;
   } catch (error) {
-    console.error('Error fetching public IP:', error);
     throw new Error('Could not retrieve public IP.');
   }
 };

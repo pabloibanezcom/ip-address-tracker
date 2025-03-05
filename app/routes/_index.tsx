@@ -16,9 +16,13 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
-    const url = new URL('/api/whatip', request.url);
+   const query = new URL(request.url).searchParams.get('q') || '';
+   const apiUrl = new URL('/api/whatip', request.url);
+   if (query) {
+     apiUrl.searchParams.append('q', query);
+   }
 
-    const response = await fetch(url.toString());
+   const response = await fetch(apiUrl.toString());
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
     const data = await response.json();
