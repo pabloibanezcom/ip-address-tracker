@@ -3,6 +3,7 @@ import { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import HomePage from '~/pages/HomePage/HomePage';
 import { IPData } from '~/types/types';
+import { fetchIPDataFromIpify } from '~/utils/ipService';
 
 export const meta: MetaFunction = () => {
   return [
@@ -16,16 +17,11 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
-   const query = new URL(request.url).searchParams.get('q') || '';
-   const apiUrl = new URL('/api/whatip', request.url);
-   if (query) {
-     apiUrl.searchParams.append('q', query);
-   }
-
-   const response = await fetch(apiUrl.toString());
-    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-
-    const data = await response.json();
+    let data: IPData | undefined;
+    const query = new URL(request.url).searchParams.get('q');
+    if (query) {
+      data = await fetchIPDataFromIpify(query);
+    }
 
     return Response.json({
       googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,

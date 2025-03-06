@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { IPData } from '~/types/types';
+import { fetchIPDataFromApi } from '../../utils/ipService';
 import HomePage from './HomePage';
 
 vi.mock('../../utils/ipService', async () => {
@@ -9,7 +10,7 @@ vi.mock('../../utils/ipService', async () => {
   );
   return {
     ...actual,
-    fetchIPData: vi.fn(),
+    fetchIPDataFromApi: vi.fn(),
   };
 });
 
@@ -35,91 +36,51 @@ describe('HomePage', () => {
     isp: 'Mock ISP',
   };
 
-  it('renders the HomePage with initial data', () => {
+  const fetchIPDataMock = vi.fn().mockResolvedValue(mockIPData);
+
+  beforeEach(() => {
+    vi.mocked(fetchIPDataFromApi).mockImplementation(fetchIPDataMock);
+  });
+
+  it('renders the HomePage with initial data', async () => {
     render(<HomePage apiKey="test-api-key" initialIPData={mockIPData} />);
 
-    expect(screen.getByText(/192.168.1.1/)).toBeInTheDocument();
-    expect(screen.getByText(/New York/)).toBeInTheDocument();
-    expect(screen.getByText(/Mock ISP/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/192.168.1.1/)).toBeInTheDocument();
+      expect(screen.getByText(/New York/)).toBeInTheDocument();
+      expect(screen.getByText(/Mock ISP/)).toBeInTheDocument();
+    });
   });
-  //   vi.mocked(fetchIPData).mockResolvedValue({
-  //     ip: '203.0.113.42',
-  //     location: {
-  //       city: 'Los Angeles',
-  //       country: 'USA',
-  //       region: 'CA',
-  //       timezone: 'UTC-08:00',
-  //       postalCode: '90001',
-  //       lat: 34.0522,
-  //       lng: -118.2437,
-  //     },
-  //     as: {
-  //       asn: 12345,
-  //       name: 'Mock ASN',
-  //       route: 'Mock Route',
-  //       domain: 'mock.com',
-  //       type: 'Mock Type',
-  //     },
-  //     isp: 'New ISP',
-  //   });
 
-  //   render(<HomePage apiKey="test-api-key" initialIPData={mockIPData} />);
+  it('displays error message on fetch failure', async () => {
+    fetchIPDataMock.mockRejectedValueOnce(new Error('Failed to fetch'));
 
-  //   const input = screen.getByRole('textbox');
-  //   await userEvent.clear(input); // Ensure input is cleared before typing
-  //   await userEvent.type(input, '203.0.113.42', { delay: 10 });
+    render(<HomePage apiKey="test-api-key" initialIPData={mockIPData} />);
 
-  //   expect(input).toHaveValue('203.0.113.42'); // Verify input has the correct value
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Failed to retrieve IP data. Please try again./)
+      ).toBeInTheDocument();
+    });
+  });
 
-  //   const button = screen.getByRole('button', { name: /search/i });
-  //   await userEvent.click(button);
+  it('fetches and displays IP data on form submission', async () => {
+    render(<HomePage apiKey="test-api-key" initialIPData={mockIPData} />);
 
-  //   await waitFor(() => {
-  //     expect(fetchIPData).toHaveBeenCalledWith('203.0.113.42'); // Ensure API call happens
-  //   });
+    const input = screen.getByPlaceholderText(
+      /Search for any IP address or domain/
+    );
+    const button = screen.getByRole('button', { name: /Search/ });
 
-  //   await waitFor(
-  //     () => {
-  //       expect(screen.getByText(/203.0.113.42/)).toBeInTheDocument();
-  //       expect(screen.getByText(/Los Angeles/)).toBeInTheDocument();
-  //       expect(screen.getByText(/New ISP/)).toBeInTheDocument();
-  //     },
-  //     { timeout: 5000 }
-  //   );
-  // });
+    fireEvent.change(input, { target: { value: '8.8.8.8' } });
 
-  // it('fetches new IP data when user interacts', async () => {
-  //   vi.mocked(fetchIPData).mockResolvedValue({
-  //     ip: '203.0.113.42',
-  //     location: {
-  //       city: 'Los Angeles',
-  //       country: 'USA',
-  //       region: 'CA',
-  //       timezone: 'UTC-08:00',
-  //       postalCode: '90001',
-  //       lat: 34.0522,
-  //       lng: -118.2437,
-  //     },
-  //     as: {
-  //       asn: 12345,
-  //       name: 'Mock ASN',
-  //       route: 'Mock Route',
-  //       domain: 'mock.com',
-  //       type: 'Mock Type',
-  //     },
-  //     isp: 'New ISP',
-  //   });
+    await waitFor(() => expect(button).not.toBeDisabled());
+    fireEvent.click(button);
 
-  //   render(<HomePage apiKey="test-api-key" initialIPData={mockIPData} />);
-  //   const input = screen.getByRole('textbox');
-  //   await userEvent.type(input, '203.0.113.42');
-  //   const button = screen.getByRole('button', { name: /search/i });
-  //   await userEvent.click(button);
-
-  //   await waitFor(() => {
-  //     expect(screen.getByText(/203.0.113.42/)).toBeInTheDocument();
-  //     expect(screen.getByText(/Los Angeles/)).toBeInTheDocument();
-  //     expect(screen.getByText(/New ISP/)).toBeInTheDocument();
-  //   });
-  // });
+    await waitFor(() => {
+      expect(screen.getByText(/192.168.1.1/)).toBeInTheDocument();
+      expect(screen.getByText(/New York/)).toBeInTheDocument();
+      expect(screen.getByText(/Mock ISP/)).toBeInTheDocument();
+    });
+  });
 });

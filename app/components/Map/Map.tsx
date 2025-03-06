@@ -1,6 +1,7 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useEffect, useState } from 'react';
 import { MapPosition } from '~/types/types';
+import markerIcon from '../../../assets/images/icon-location.svg';
 import style from './Map.module.css';
 
 type MapProps = {
@@ -34,7 +35,9 @@ const Map: React.FC<MapProps> = ({ apiKey, position }) => {
             zoom={12}
             options={{ disableDefaultUI: true }}
           >
-            {mapLoaded && <Marker position={position} />}
+            {mapLoaded && (
+              <Marker position={position} icon={{ url: markerIcon }} />
+            )}
           </GoogleMap>
         </LoadScript>
       )}
