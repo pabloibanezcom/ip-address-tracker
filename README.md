@@ -1,40 +1,67 @@
-# Welcome to Remix!
+# Frontend Mentor - IP address tracker solution
 
-- 📖 [Remix docs](https://remix.run/docs)
+This is a solution to the [IP address tracker challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/ip-address-tracker-I8-0yYAH0). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-## Development
+## Table of contents
 
-Run the dev server:
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Live Site URL](#live-site-url)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Author](#author)
 
-```shellscript
-npm run dev
-```
+## Overview
 
-## Deployment
+### The challenge
 
-First, build your app for production:
+Users should be able to:
 
-```sh
-npm run build
-```
+- View the optimal layout for each page depending on their device's screen size
+- See hover states for all interactive elements on the page
+- See their own IP address on the map on the initial page load
+- Search for any IP addresses or domains and see the key information and location
+- No-JS version
 
-Then run the app in production mode:
+### Screenshot
 
-```sh
-npm start
-```
+![](./assets/images/screenshot.png)
 
-Now you'll need to pick a host to deploy it to.
+No-JS version
 
-### DIY
+![](./assets/images/screenshot-no-js.png)
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+### Live Site URL
 
-Make sure to deploy the output of `npm run build`
+[https://ip-address-tracker-sandy-two.vercel.app/](https://ip-address-tracker-sandy-two.vercel.app/)
 
-- `build/server`
-- `build/client`
+## My process
 
-## Styling
+### Built with
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+- Remix
+- React
+- Typescript
+- CSS modules
+- Vitest
+- Mock Service Worker (MSW)
+- Google Maps
+
+### Continued development
+
+Due to timing limitation this is just a simple solution to achieve all the initial goals following good standards. However this could be extended by several ways. To be discussed in following sessions.
+
+### Useful resources
+
+- [Mock Service Worker](https://mswjs.io/) - Mock Service Worker is an API mocking library that allows you to write client-agnostic mocks and reuse them across any frameworks, tools, and environments.
+- [Google Maps API](https://developers.google.com/maps) - API to use Google Maps in the site.
+
+## Author
+
+- Website - [Pablo Ibanez](https://pabloibanez.com/)
+- Linkedin - [pablo-ibanez-dev](https://www.linkedin.com/in/pablo-ibanez-dev/)
+- Github - [pabloibanezcom](https://github.com/pabloibanezcom)
+

@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
   return [
     { title: 'IP address tracker' },
     {
-      name: 'description',
+      name: 'IP Address Tracker Search for any IP address or domain IP ',
       content: 'PoC application developed by Pablo Ibanez',
     },
   ];
